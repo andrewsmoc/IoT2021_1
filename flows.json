@@ -7,6 +7,42 @@
         "info": ""
     },
     {
+        "id": "da079f37.f8662",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "dc1fddfe.ecff2",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "d77149d.ba9e5b8",
+        "type": "tab",
+        "label": "Flow 4",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "759de4e6.9b36ac",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "grupounoiot",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "149e95ea.093e9a",
+        "type": "firebase admin",
+        "name": "iot"
+    },
+    {
         "id": "7493e9ee.4b09e8",
         "type": "comment",
         "z": "d5fa64cb.895788",
@@ -59,6 +95,352 @@
         "statusType": "auto",
         "x": 420,
         "y": 200,
+        "wires": []
+    },
+    {
+        "id": "b3080927.933dd8",
+        "type": "mysql",
+        "z": "d5fa64cb.895788",
+        "mydb": "759de4e6.9b36ac",
+        "name": "registrosensor",
+        "x": 600,
+        "y": 460,
+        "wires": [
+            [
+                "d25f0f5d.1531a"
+            ]
+        ]
+    },
+    {
+        "id": "42a62aa.52e8dd4",
+        "type": "inject",
+        "z": "d5fa64cb.895788",
+        "name": "Crear tabla SQL",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "CREATE TABLE `registrosensor` (`id` INT NOT NULL AUTO_INCREMENT, `temperatura` FLOAT NOT NULL, `humedad` FLOAT NOT NULL, `fecha` TIMESTAMP NOT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;",
+        "payload": "",
+        "payloadType": "date",
+        "x": 370,
+        "y": 420,
+        "wires": [
+            [
+                "b3080927.933dd8"
+            ]
+        ]
+    },
+    {
+        "id": "a07cadd5.8098",
+        "type": "inject",
+        "z": "d5fa64cb.895788",
+        "name": "Mostrar tablas",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "show tables;",
+        "payload": "",
+        "payloadType": "date",
+        "x": 360,
+        "y": 500,
+        "wires": [
+            [
+                "b3080927.933dd8"
+            ]
+        ]
+    },
+    {
+        "id": "d25f0f5d.1531a",
+        "type": "debug",
+        "z": "d5fa64cb.895788",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "e0debe72.46d13",
+        "type": "inject",
+        "z": "d5fa64cb.895788",
+        "name": "Describir tabla",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "describe registrosensor;",
+        "payload": "",
+        "payloadType": "date",
+        "x": 370,
+        "y": 580,
+        "wires": [
+            [
+                "b3080927.933dd8"
+            ]
+        ]
+    },
+    {
+        "id": "c326f729.3f0658",
+        "type": "mysql",
+        "z": "da079f37.f8662",
+        "mydb": "759de4e6.9b36ac",
+        "name": "registrosensor",
+        "x": 480,
+        "y": 320,
+        "wires": [
+            [
+                "fbd87034.eb56a"
+            ]
+        ]
+    },
+    {
+        "id": "490ffc6a.7c7974",
+        "type": "inject",
+        "z": "da079f37.f8662",
+        "name": "simularJson",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"temperatura\":50,\"humedad\":80}",
+        "payloadType": "json",
+        "x": 190,
+        "y": 140,
+        "wires": [
+            [
+                "d1ceef04.e534"
+            ]
+        ]
+    },
+    {
+        "id": "d1ceef04.e534",
+        "type": "function",
+        "z": "da079f37.f8662",
+        "name": "insertSql",
+        "func": "temperatura = msg.payload.temperatura;\nhumedad = msg.payload.humedad;\nmsg.topic = \"insert into registrosensor (id, temperatura , humedad, fecha) values (default,\" + temperatura + \",\" + humedad + \",\" + \"CURRENT_TIMESTAMP\"+ \")\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "x": 340,
+        "y": 220,
+        "wires": [
+            [
+                "c326f729.3f0658"
+            ]
+        ]
+    },
+    {
+        "id": "fbd87034.eb56a",
+        "type": "debug",
+        "z": "da079f37.f8662",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 650,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "d1448367.2cf5b",
+        "type": "inject",
+        "z": "dc1fddfe.ecff2",
+        "name": "consultar tabla",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "select * from registrosensor",
+        "payload": "",
+        "payloadType": "date",
+        "x": 430,
+        "y": 260,
+        "wires": [
+            [
+                "60690f08.85f4e"
+            ]
+        ]
+    },
+    {
+        "id": "53669c78.b94db4",
+        "type": "debug",
+        "z": "dc1fddfe.ecff2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "60690f08.85f4e",
+        "type": "mysql",
+        "z": "dc1fddfe.ecff2",
+        "mydb": "759de4e6.9b36ac",
+        "name": "registrosensor",
+        "x": 620,
+        "y": 320,
+        "wires": [
+            [
+                "53669c78.b94db4"
+            ]
+        ]
+    },
+    {
+        "id": "e99fc066.7a95c",
+        "type": "inject",
+        "z": "dc1fddfe.ecff2",
+        "name": "Actualizar registro",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "update registrosensor set temperatura = 50 where id = 1;",
+        "payload": "",
+        "payloadType": "date",
+        "x": 390,
+        "y": 360,
+        "wires": [
+            [
+                "60690f08.85f4e"
+            ]
+        ]
+    },
+    {
+        "id": "bb4730bd.08757",
+        "type": "firebase out",
+        "z": "d77149d.ba9e5b8",
+        "name": "Firebase",
+        "ref": "iot2021-d8595-default-rtdb",
+        "operation": "set",
+        "admin": "149e95ea.093e9a",
+        "x": 580,
+        "y": 260,
+        "wires": [
+            [
+                "9b761f77.c941e"
+            ]
+        ]
+    },
+    {
+        "id": "95daaf01.8e84b",
+        "type": "inject",
+        "z": "d77149d.ba9e5b8",
+        "name": "Simular JSON",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"temperatura\":23,\"humedad\":70}",
+        "payloadType": "json",
+        "x": 280,
+        "y": 360,
+        "wires": [
+            [
+                "bb4730bd.08757"
+            ]
+        ]
+    },
+    {
+        "id": "9b761f77.c941e",
+        "type": "debug",
+        "z": "d77149d.ba9e5b8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 380,
         "wires": []
     }
 ]
